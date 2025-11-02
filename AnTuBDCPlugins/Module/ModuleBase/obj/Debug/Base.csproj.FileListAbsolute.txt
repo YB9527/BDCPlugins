@@ -1,0 +1,15 @@
+J:\person\林权\林权\Base\obj\Debug\Base.Properties.Resources.resources
+J:\person\林权\林权\Base\obj\Debug\Base.csproj.GenerateResource.cache
+J:\person\林权\林权\Base\obj\Debug\Base.csproj.CoreCompileInputs.cache
+J:\person\林权\林权\Base\obj\Debug\Base.exe.config
+J:\person\林权\林权\Base\bin\Debug\Base.exe.config
+J:\person\林权\林权\Base\bin\Debug\Base.exe
+J:\person\林权\林权\Base\bin\Debug\Base.pdb
+J:\person\林权\林权\Base\bin\Debug\Newtonsoft.Json.dll
+J:\person\林权\林权\Base\bin\Debug\System.Memory.dll
+J:\person\林权\林权\Base\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+J:\person\林权\林权\Base\bin\Debug\System.Numerics.Vectors.dll
+J:\person\林权\林权\Base\bin\Debug\System.Buffers.dll
+J:\person\林权\林权\Base\obj\Debug\Base.csproj.CopyComplete
+J:\person\林权\林权\Base\obj\Debug\Base.exe
+J:\person\林权\林权\Base\obj\Debug\Base.pdb

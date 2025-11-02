@@ -1,0 +1,116 @@
+﻿using ModuleBase.Tool;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ModuleBase.Component
+{
+    public class ButtonEditFileSelect :DevExpress.XtraEditors.ButtonEdit
+    {
+        public bool Self_IsMust { get; set; }
+        public String Self_BindAttr { get; set; }
+        private Object _My_BindData;
+        public Object Self_BindData
+        {
+            get
+            {
+                return _My_BindData;
+            }
+            set
+            {
+                _My_BindData = value;
+                this.BindData();
+               
+            }
+        }
+
+        private string _cacheTag;
+
+        public string Self_CacheTag
+        {
+            get
+            {
+                return _cacheTag;
+            }
+            set
+            {
+                _cacheTag = value;
+                SetText();
+            }
+        }
+
+        private bool IsInit { get; set; }
+        public ButtonEditFileSelect():base()
+        {
+            this.EditValueChanged += new System.EventHandler(this._EditValueChanged);
+            this.ButtonClick += _ButtonClick;
+            
+            this.SetText();
+            IsInit = true;
+        }
+
+        private void SetText()
+        {
+            if (StringUtils.IsNullOrTrimEmpty(Self_CacheTag))
+            {
+                return;
+            }
+            this.Text = AppTool.GetCacheTool().GetValue(this.Self_CacheTag);
+        }
+
+        private void _ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
+        {
+            //打开文件
+            if (File.Exists(Text))
+            {
+                Process.Start(Text);
+            }
+        }
+
+        private void _EditValueChanged(object sender, EventArgs e)
+        {
+            this.BindData();
+            if (!IsInit)
+            {
+                return;
+            }
+            
+            //记录文件位置
+            if (StringUtils.IsNullOrTrimEmpty(Self_CacheTag))
+            {
+                return;
+            }
+            AppTool.GetCacheTool().SetValue(Self_CacheTag, Text, true);
+
+        }
+        private void BindData()
+        {
+            if (StringUtils.IsNullOrTrimEmpty(Self_BindAttr) || Self_BindData == null)
+            {
+                return;
+            }
+            if (Self_BindData is JObject)
+            {
+                ((JObject)Self_BindData)[Self_BindAttr] = this.Text;
+            }
+            else
+            {
+               var method = Self_BindData.GetType().GetMethod("set_"+ Self_BindAttr);
+                if(method != null)
+                {
+                    method.Invoke(Self_BindData, new object[] { this.Text });
+
+                }
+            }
+        }
+
+    }
+
+   
+}

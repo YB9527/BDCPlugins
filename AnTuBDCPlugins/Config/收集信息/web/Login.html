@@ -1,0 +1,229 @@
+<!--<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <title>不动产权籍调查系统</title>
+    <!-- <link href="Theme/Login/style.css" rel="stylesheet" type="text/css" />-->
+    <!--  <link href="../FrameWork/Theme/Styles/Global.css" rel="stylesheet" type="text/css" />-->
+    <!--框架必需start-->
+    <script src="../FrameWork/Script/Jquery/Jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../FrameWork/Script/Plug/QUI4.0/libs/js/language/cn.js"></script>
+    <script src="../FrameWork/Script/Jquery/jquery-mgd.js" type="text/javascript"></script>
+    <script src="../FrameWork/Script/Common/Jquery.Common.js" type="text/javascript"></script>
+    <script src="Js/Common/common.js"></script>
+    <script src="../FrameWork/Script/Common/Jquery.Global.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../FrameWork/Script/Plug/QUI4.0/libs/js/framework.js"></script>
+    <script type="text/javascript" src="../FrameWork/Script/Plug/QUI4.0/libs/js/popup/dialog.js"></script>
+    <link href="../FrameWork/Script/Plug/QUI4.0/libs/css/import_basic.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" id="skin" prepath="../FrameWork/Script/Plug/QUI4.0/"/> <!--此处存在问题-->
+    <link rel="stylesheet" type="text/css" id="customSkin"/> <!--此处存在问题-->
+    <link href="../FrameWork/Script/Plug/QUI4.0/libs/skins/blue/style.css" rel="stylesheet" type="text/css" id="Link1" themecolor="blue"/>
+    <!--ca认证js-->
+    <script language="JavaScript" src="Js/PageController/gdca/jquery.jsonp.js" type="text/javascript"></script>
+    <script language="JavaScript" src="Js/PageController/gdca/wt_base64.js" type="text/javascript"></script>
+    <script language="JavaScript" src="Js/PageController/gdca/util.js" type="text/javascript"></script>
+    <script language="JavaScript" src="Js/PageController/gdca/gdca-pki-lib-s.js" type="text/javascript"></script>
+    <script language="JavaScript" src="Js/PageController/gdca/gdca.js" type="text/javascript"></script>
+    <!-- end -->
+
+
+    <!--文鼎创加密狗-->
+    <script language="JavaScript" src="./../Bdc/Script/PageController/gdca/SecCtrl.js" type="text/javascript"></script>
+    <script language="JavaScript" src="./../Bdc/Script/PageController/gdca/CaSign.js" type="text/javascript"></script>
+    <!-- end -->
+    <!--信安CA-->
+    <script src="./../Bdc/Script/PageController/xaca/InfosecNetSignCNGAgent.min.js"></script>
+    <script src="./../Bdc/Script/PageController/xaca/InfosecModal.js"></script>
+
+    <script src="Js/login.js" type="text/javascript"></script>
+    <!--框架必需end-->
+    <script type="text/javascript">
+        function CheckImg() {
+            if ($("#checkSave").attr("checked")) {
+                $("#imgMm").attr('src', './../Bdc/Theme/logo/images/jzmmxz.png');
+            } else {
+                $("#imgMm").attr('src', './../Bdc/Theme/logo/images/jzmmct.png');
+            }
+        }
+
+        function ImgClick() {
+            if ($("#checkSave").attr("checked")) {
+                $("#checkSave").attr("checked", false);
+            } else {
+                $("#checkSave").attr("checked", true);
+            }
+            CheckImg();
+        }
+
+        $(document).ready(function () {
+            window.name = "登录页";
+            var lname = Common.GetCookie("remloginName");
+            var pwd = Common.GetCookie("password");
+            var chk = Common.GetCookie("chksave");
+            $("#txtLogin").val(lname);
+            $("#txtPass").val(pwd);
+            if (eval(chk)) {
+                // $("#checkSave")[0].checked = "checked";
+                $("#sing-1").click()
+            }
+
+            /* $("#checkSave").click(function () {
+                 CheckImg();
+             });*/
+
+            // CheckImg();
+
+
+            // 设置回车登录
+            if (document.addEventListener) {
+                document.addEventListener("keypress", PressHandler, true);
+            } else {
+                document.attachEvent("onkeypress", PressHandler);
+            }
+            var softdog = getConfig("softdog");
+            if (softdog == '1') {
+                caInit();//使用ca
+            }
+        });
+
+        function customHeightSet(contentHeight) {
+            $("#bodyBg").height(contentHeight - 30);
+            // $("#blankTop").css('padding-top', contentHeight * 0.1);
+            //页面自适应登录页框的位置
+            var bodyHeight = $("#bodyBg").css("height");
+            var backgroundHeight = (Math.floor((bodyHeight.match(/\d+/) - 472) *0.35)) + "px";
+            $("#blankTop").css('padding-top', backgroundHeight);
+        }
+
+
+        //登录
+        function PressHandler(evt) {
+            if (evt.keyCode == 13) {
+                login.login();
+            }
+        }
+
+        //从framework.js里left1_bf.html面加载这个方法来判断是否需要验证码显示
+        function initComplete() {
+            getIsNeedCheckCode();//是否配置验证码
+            checkCodeChange();//改变验证码
+        }
+
+    </script>
+    <style>
+        .goChecking {
+            display: none;
+        }
+
+        ::-webkit-input-placeholder {
+            color: #929292;
+            font-style: italic;
+            font-size: 10px;
+            font-family: 微软雅黑
+        }
+
+        [type="checkbox"]:not(:checked) + label:before {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 0px;
+            width: 13px;
+            height: 13px;
+            background: #fff;
+            border-radius: 1px;
+            /*box-shadow: inset 0 1px 3px rgba(0, 0, 0, .3);*/
+            line-height: 150%;
+            border: 1px solid #0091F5;
+        }
+
+        .namePwdInput {
+            font-family: 宋体;
+            width: 300px;
+            height: 40px;
+            line-height: 37px;
+            background-repeat: no-repeat;
+            border: 1px solid rgb(220, 223, 230);
+            padding-left: 1rem;
+        }
+
+        .namePwdInput:hover {
+            border: 1px solid rgb(192, 196, 204);
+
+        }
+
+        .namePwdInput:focus {
+            border: 1px solid rgb(64, 158, 255);
+        }
+
+        .namePwdInput::placeholder {
+            font-style: normal;
+        }
+    </style>
+
+</head>
+<body class="b" style="background-image: url(./Images/bj1500h.png); background-repeat: repeat-x; vertical-align: middle;">
+<div id="bodyBg" style="background-image: url(./Images/1280x800bjt.png);background-repeat:no-repeat;background-size:100% 100%; background-position: center; margin: 0px auto; height: 800px;">
+    <div id="blankTop" style="padding-top: 1%;">
+    </div>
+    <div style="background-image: url(./Images/title.png);width: 707px; height: 80px; background-position: center; background-repeat: no-repeat; margin: 0px auto;"></div>
+    <div style="padding-top: 2%;">
+    </div>
+    <!--中间登陆-->
+    <div style="background-image: url(./Images/loginmark.png); width: 865px; height: 392px;background-size:100% 100%; background-position: center; background-repeat: no-repeat; margin: 0px auto;">
+        <div style="padding-top: 5%; margin-left: 30%;line-height: 46px; text-align: center; font-family: 微软雅黑; font-size: 26px; font-weight:100;color: rgba(0,0,0);">
+            用户登录
+        </div>
+        <div>
+            <table style="padding-top: 2%; padding-left: 56%">
+                <tr>
+                    <td id = "inputUserName">
+                        <input style="font-size: 18px;  font-family: 宋体;  width: 300px; height: 33px; line-height: 29px; background-repeat: no-repeat; "
+                               class="namePwdInput username " placeholder="请输入用户名" id="txtLogin" type="text" maxlength="12" name="UserName" keepdefaultstyle="true"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding-top: 10px" id = "inputPwd">
+                        <input style="font-family: 宋体; width: 300px; height: 33px; line-height: 29px; background-repeat: no-repeat;"
+                               id="txtPass" type="password" placeholder="请输入密码" class="namePwdInput password" maxlength="20" name="password"
+                               keepdefaultstyle="true"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td id="CheckCodeName" class="goChecking" style="text-align: center; width: 60px; font-size: 12px; font-family: 宋体;">
+                        验证码：
+                    </td>
+                    <td class="goChecking" style="padding-top: 20px">
+                        <input type="hidden" id="CheckCodeNum"/>
+                        <!--<input style="font-size: 18px; font-family: 宋体; background-image: url(./Images/srd.png); width: 154px; height: 29px; line-height: 29px; background-repeat: no-repeat; border-bottom-width: 0px; border-left-width: 0px; border-top-width: 0px; border-right-width: 0px;" type="text" maxlength="12" id="CheckCodeValue"/>-->
+                        <input style="position:relative; top:-11px; width: 210px;" class = "namePwdInput checkCode"  placeholder="请输入验证码" id="CheckCodeValue" type="text" maxlength="12"  keepdefaultstyle="true"/>
+                        <img id="CheckCodeImg" style="cursor: pointer;" src="data:image/png;base64," onclick="checkCodeChange();"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td id ="dlBtn"  style="padding-top: 10px">
+                        <div style="background-image: url(./Images/ldbutton.png); background-repeat: no-repeat;
+                             text-align: center; width: 300px; height: 40px;
+                              cursor: pointer; font-size: 18px " onclick="login.login()"
+                             keepdefaultstyle="true"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td id ="checkBoxRmr" align="center" style="padding-top: 10px">
+                        <input for="checkSave" onclick="ImgClick()" type="checkbox" id="sing-1" name="hobby-1" value="记住密码"/>
+                        <label for="sing-1" class="hand" style="color:#0091F5 ">记住密码</label>
+                    </td>
+                    <input id="checkSave" type="checkbox" onkeydown="login.EnterKeyClick()"
+                           style="display: none;"/>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+</div>
+<div style="background-image: url(./Images/bqbjt.png); background-position: center; height: 30px; line-height: 30px; text-align: center; color: #FFF; margin: 0px auto; font-family: 微软雅黑; font-size: 13px; color: rgba(255,255,255,65%);">
+    CopyRight @2019-2022 Beijing-shijiantu .All Rights Reserved.北京世纪安图数码科技发展有限责任公司版权所有 版本信息V5.0
+</div>
+</body>
+</html>
